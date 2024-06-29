@@ -42,6 +42,7 @@ namespace ADBScuffedMirroring
                         connectBtn.Visible = false;
                         int? width = screenBox.Image.Size.Width;
                         int? height = screenBox.Image.Size.Height;
+                        screenBox.Size = new Size((width ?? 240) + 8, (height ?? 320) + 28);
                         tabs.Size = new Size((width ?? 240) + 8, (height ?? 320) + 28);
                         ClientSize = new Size((width ?? 240) + 8, (height ?? 320) + 28);
                     } else

@@ -35,6 +35,7 @@
             testToolStripMenuItem = new ToolStripMenuItem();
             tabs = new TabControl();
             screenPage = new TabPage();
+            connectBtn = new Button();
             settingsPage = new TabPage();
             button1 = new Button();
             FPSLabel = new Label();
@@ -45,7 +46,7 @@
             powerDrpDwn = new ComboBox();
             button2 = new Button();
             openFileDialog1 = new OpenFileDialog();
-            connectBtn = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)screenBox).BeginInit();
             contextMenuStrip1.SuspendLayout();
             tabs.SuspendLayout();
@@ -108,8 +109,19 @@
             screenPage.Text = "Screen";
             screenPage.UseVisualStyleBackColor = true;
             // 
+            // connectBtn
+            // 
+            connectBtn.Location = new Point(84, 291);
+            connectBtn.Name = "connectBtn";
+            connectBtn.Size = new Size(75, 23);
+            connectBtn.TabIndex = 1;
+            connectBtn.Text = "Connect";
+            connectBtn.UseVisualStyleBackColor = true;
+            connectBtn.Click += connectBtn_Click;
+            // 
             // settingsPage
             // 
+            settingsPage.Controls.Add(label1);
             settingsPage.Controls.Add(button1);
             settingsPage.Controls.Add(FPSLabel);
             settingsPage.Controls.Add(textBox1);
@@ -203,15 +215,14 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // connectBtn
+            // label1
             // 
-            connectBtn.Location = new Point(84, 291);
-            connectBtn.Name = "connectBtn";
-            connectBtn.Size = new Size(75, 23);
-            connectBtn.TabIndex = 1;
-            connectBtn.Text = "Connect";
-            connectBtn.UseVisualStyleBackColor = true;
-            connectBtn.Click += connectBtn_Click;
+            label1.AutoSize = true;
+            label1.Location = new Point(25, 98);
+            label1.Name = "label1";
+            label1.Size = new Size(180, 30);
+            label1.TabIndex = 3;
+            label1.Text = "Note: Due to the way this works, \r\nlow ms may crash the device.";
             // 
             // deviceForm
             // 
@@ -252,5 +263,6 @@
         private ComboBox powerDrpDwn;
         private Button powerBtn;
         private Button connectBtn;
+        private Label label1;
     }
 }
