@@ -1,0 +1,179 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace ADBScuffedMirroring.ADB;
+public class Keycodes
+{
+    public static int getKeycode(Keys code)
+    {
+        // was told that this was the best way to do it...
+        // I don't believe them but I'll do it for now anyway because I don't know any other way.
+        switch (code)
+        {
+            case Keys.Back:
+                return 67;
+            case Keys.A:
+                return 29;
+            case Keys.B:
+                return 30;
+            case Keys.C:
+                return 31;
+            case Keys.D:
+                return 32;
+            case Keys.E:
+                return 33;
+            case Keys.F:
+                return 34;
+            case Keys.G:
+                return 35;
+            case Keys.H:
+                return 36;
+            case Keys.I:
+                return 37;
+            case Keys.J:
+                return 38;
+            case Keys.K:
+                return 39;
+            case Keys.L:
+                return 40;
+            case Keys.M:
+                return 41;
+            case Keys.N:
+                return 42;
+            case Keys.O:
+                return 43;
+            case Keys.P:
+                return 44;
+            case Keys.Q:
+                return 45;
+            case Keys.R:
+                return 46;
+            case Keys.S:
+                return 47;
+            case Keys.T:
+                return 48;
+            case Keys.U:
+                return 49;
+            case Keys.V:
+                return 50;
+            case Keys.W:
+                return 51;
+            case Keys.X:
+                return 52;
+            case Keys.Y:
+                return 53;
+            case Keys.Z:
+                return 54;
+            case Keys.D0:
+                return 7;
+            case Keys.D1:
+                return 8;
+            case Keys.D2:
+                return 9;
+            case Keys.D3:
+                return 10;
+            case Keys.D4:
+                return 11;
+            case Keys.D5:
+                return 12;
+            case Keys.D6:
+                return 13;
+            case Keys.D7:
+                return 14;
+            case Keys.D8:
+                return 15;
+            case Keys.D9:
+                return 16;
+            case Keys.Oemtilde:
+                return 68;
+            case Keys.OemMinus:
+                return 69;
+            case Keys.Oemplus:
+                return 70;
+            case Keys.OemOpenBrackets:
+                return 71;
+            case Keys.OemCloseBrackets:
+                return 72;
+            case Keys.OemPipe:
+                return 73;
+            case Keys.OemSemicolon:
+                return 74;
+            case Keys.OemQuotes:
+                return 75;
+            case Keys.Oemcomma:
+                return 55;
+            case Keys.OemPeriod:
+                return 56;
+            case Keys.OemQuestion:
+                return 76;
+            case Keys.Space:
+                return 62;
+            case Keys.Tab:
+                return 61;
+            case Keys.Enter:
+                return 66;
+            case Keys.CapsLock:
+                return 115;
+            case Keys.Escape:
+                return 111;
+            case Keys.PageUp:
+                return 92;
+            case Keys.PageDown:
+                return 93;
+            case Keys.End:
+                return 123;
+            case Keys.Home:
+                return 122;
+            case Keys.Left:
+                return 21;
+            case Keys.Up:
+                return 19;
+            case Keys.Right:
+                return 22;
+            case Keys.Down:
+                return 20;
+            case Keys.Insert:
+                return 124;
+            case Keys.Delete:
+                return 112;
+            case Keys.NumLock:
+                return 143;
+            case Keys.Scroll:
+                return 116;
+            case Keys.Pause:
+                return 121;
+            case Keys.PrintScreen:
+                return 124;
+            case Keys.Sleep:
+                return 223;
+            case Keys.Help:
+                return 259;
+            case Keys.LWin:
+                return 219;
+            case Keys.RWin:
+                return 220;
+            case Keys.Apps:
+                return 223;
+            case Keys.MediaPlayPause:
+                return 85;
+            case Keys.MediaStop:
+                return 86;
+            case Keys.MediaNextTrack:
+                return 87;
+            case Keys.MediaPreviousTrack:
+                return 88;
+            case Keys.VolumeUp:
+                return 115;
+            case Keys.VolumeDown:
+                return 114;
+            case Keys.VolumeMute:
+                return 113;
+            default:
+                return 0;
+        }
+    }
+}
