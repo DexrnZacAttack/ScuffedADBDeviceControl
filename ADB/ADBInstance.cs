@@ -20,7 +20,10 @@ namespace ADBScuffedMirroring.ADB
         {
             this.client = client;
             this.deviceData = this.client.GetDevices().FirstOrDefault();
-            this.device = DeviceConnectionHandler.Connect(client, deviceData);
+            if (!deviceData.IsEmpty)
+                this.device = DeviceConnectionHandler.Connect(client, deviceData);
+            else
+                MessageBox.Show("No device found!", "No device!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

@@ -14,16 +14,46 @@ namespace ADBScuffedMirroring
         {
             // Dexrn: Welcome to scuffed code... I am by no means a good, or even okay C# coder (atleast that's what people tell me).
             InitializeComponent();
-            Text = $"SASM: {inst.deviceData.Model}";
+            init();
+        }
+
+        private void init()
+        {
+            // if device "isEmpty" then set to null.
+            if (inst.deviceData.IsEmpty)
+            {
+                inst = null;
+            }
+            string model = inst.deviceData.Model ?? "Unknown/Disconnected";
+            Text = $"SADC: {model}";
         }
 
         private async void timerTick(object sender, EventArgs e)
         {
-            if (screenBox != null)
+            if (screenBox != null && !inst.deviceData.IsEmpty)
             {
-                screenBox.Image = await GrabFrameBuffer(inst.client, inst.deviceData);
-                tabs.Size = new Size(screenBox.Image.Size.Width + 8, screenBox.Image.Size.Height + 28);
-                ClientSize = new Size(screenBox.Image.Size.Width + 8, screenBox.Image.Size.Height + 28);
+                try
+                {
+                    // Dexrn: This is done as the original purpose of this was to allow for screen mirroring of my ANS F30, which does not have a working encoder.
+                    // This should not be done in normal circumstances but unfortunately I want compatibility over functionality.
+                    screenBox.Image = await GrabFrameBuffer(inst.client, inst.deviceData);
+                    if (screenBox.Image != null)
+                    {
+                        connectBtn.Visible = false;
+                        int? width = screenBox.Image.Size.Width;
+                        int? height = screenBox.Image.Size.Height;
+                        tabs.Size = new Size((width ?? 240) + 8, (height ?? 320) + 28);
+                        ClientSize = new Size((width ?? 240) + 8, (height ?? 320) + 28);
+                    } else
+                    {
+                        connectBtn.Visible = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tabs.Size = new Size(240 + 8, 320 + 28);
+                    ClientSize = new Size(240 + 8, 320 + 28);
+                }
             }
         }
 
@@ -74,11 +104,43 @@ namespace ADBScuffedMirroring
                 {
                     await inst.client.InstallAsync(inst.deviceData, stream);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Error installing APK", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private async void powerBtn_ClickAsync(object sender, EventArgs e)
+        {
+            switch (powerDrpDwn.SelectedItem.ToString())
+            {
+                // ew
+                case "Reboot":
+                    await inst.client.RebootAsync("", inst.deviceData);
+                    break;
+                case "Reboot (Recovery)":
+                    await inst.client.RebootAsync("recovery", inst.deviceData);
+                    break;
+                case "Reboot (Bootloader)":
+                    await inst.client.RebootAsync("bootloader", inst.deviceData);
+                    break;
+                case "Reboot (Sideload)":
+                    await inst.client.RebootAsync("sideload", inst.deviceData);
+                    break;
+                case "Shutdown":
+                    await inst.client.ExecuteShellCommandAsync(inst.deviceData, "reboot -P");
+                    break;
+                default:
+                    MessageBox.Show("No power mode selected!", "No power mode selected.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
+        }
+
+        private void connectBtn_Click(object sender, EventArgs e)
+        {
+            init();
         }
     }
 }

@@ -36,21 +36,27 @@
             tabs = new TabControl();
             screenPage = new TabPage();
             settingsPage = new TabPage();
-            button2 = new Button();
             button1 = new Button();
             FPSLabel = new Label();
             textBox1 = new TextBox();
+            deviceControl = new TabPage();
+            powerBtn = new Button();
+            powerText = new Label();
+            powerDrpDwn = new ComboBox();
+            button2 = new Button();
             openFileDialog1 = new OpenFileDialog();
+            connectBtn = new Button();
             ((System.ComponentModel.ISupportInitialize)screenBox).BeginInit();
             contextMenuStrip1.SuspendLayout();
             tabs.SuspendLayout();
             screenPage.SuspendLayout();
             settingsPage.SuspendLayout();
+            deviceControl.SuspendLayout();
             SuspendLayout();
             // 
             // screenBox
             // 
-            screenBox.BackColor = Color.Black;
+            screenBox.BackColor = Color.Transparent;
             screenBox.Location = new Point(0, 0);
             screenBox.Name = "screenBox";
             screenBox.Size = new Size(240, 320);
@@ -80,6 +86,7 @@
             // 
             tabs.Controls.Add(screenPage);
             tabs.Controls.Add(settingsPage);
+            tabs.Controls.Add(deviceControl);
             tabs.Location = new Point(0, 0);
             tabs.Margin = new Padding(0);
             tabs.Name = "tabs";
@@ -91,6 +98,7 @@
             // 
             // screenPage
             // 
+            screenPage.Controls.Add(connectBtn);
             screenPage.Controls.Add(screenBox);
             screenPage.Location = new Point(4, 24);
             screenPage.Name = "screenPage";
@@ -102,7 +110,6 @@
             // 
             // settingsPage
             // 
-            settingsPage.Controls.Add(button2);
             settingsPage.Controls.Add(button1);
             settingsPage.Controls.Add(FPSLabel);
             settingsPage.Controls.Add(textBox1);
@@ -113,16 +120,6 @@
             settingsPage.TabIndex = 1;
             settingsPage.Text = "Settings";
             settingsPage.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(76, 291);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 3;
-            button2.Text = "Install APK";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += InstallAPKBtn;
             // 
             // button1
             // 
@@ -150,25 +147,89 @@
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 0;
             // 
+            // deviceControl
+            // 
+            deviceControl.Controls.Add(powerBtn);
+            deviceControl.Controls.Add(powerText);
+            deviceControl.Controls.Add(powerDrpDwn);
+            deviceControl.Controls.Add(button2);
+            deviceControl.Location = new Point(4, 24);
+            deviceControl.Name = "deviceControl";
+            deviceControl.Padding = new Padding(3);
+            deviceControl.Size = new Size(240, 320);
+            deviceControl.TabIndex = 2;
+            deviceControl.Text = "Device";
+            deviceControl.UseVisualStyleBackColor = true;
+            // 
+            // powerBtn
+            // 
+            powerBtn.Location = new Point(75, 245);
+            powerBtn.Name = "powerBtn";
+            powerBtn.Size = new Size(75, 23);
+            powerBtn.TabIndex = 7;
+            powerBtn.Text = "Set Power";
+            powerBtn.UseVisualStyleBackColor = true;
+            powerBtn.Click += powerBtn_ClickAsync;
+            // 
+            // powerText
+            // 
+            powerText.AutoSize = true;
+            powerText.Location = new Point(91, 198);
+            powerText.Name = "powerText";
+            powerText.Size = new Size(40, 15);
+            powerText.TabIndex = 6;
+            powerText.Text = "Power";
+            // 
+            // powerDrpDwn
+            // 
+            powerDrpDwn.DropDownStyle = ComboBoxStyle.DropDownList;
+            powerDrpDwn.FormattingEnabled = true;
+            powerDrpDwn.Items.AddRange(new object[] { "Reboot", "Reboot (Recovery)", "Reboot (Bootloader)", "Reboot (Sideload)", "Shutdown" });
+            powerDrpDwn.Location = new Point(52, 216);
+            powerDrpDwn.Name = "powerDrpDwn";
+            powerDrpDwn.Size = new Size(121, 23);
+            powerDrpDwn.TabIndex = 5;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(75, 291);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 4;
+            button2.Text = "Install APK";
+            button2.UseVisualStyleBackColor = true;
+            // 
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // imageForm
+            // connectBtn
+            // 
+            connectBtn.Location = new Point(84, 291);
+            connectBtn.Name = "connectBtn";
+            connectBtn.Size = new Size(75, 23);
+            connectBtn.TabIndex = 1;
+            connectBtn.Text = "Connect";
+            connectBtn.UseVisualStyleBackColor = true;
+            connectBtn.Click += connectBtn_Click;
+            // 
+            // deviceForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(246, 347);
             Controls.Add(tabs);
             MaximizeBox = false;
-            Name = "imageForm";
-            Text = "Scuffed ADB Screen Mirrorer";
+            Name = "deviceForm";
+            Text = "Scuffed ADB Device Control";
             ((System.ComponentModel.ISupportInitialize)screenBox).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             tabs.ResumeLayout(false);
             screenPage.ResumeLayout(false);
             settingsPage.ResumeLayout(false);
             settingsPage.PerformLayout();
+            deviceControl.ResumeLayout(false);
+            deviceControl.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -184,7 +245,12 @@
         private Label FPSLabel;
         private TextBox textBox1;
         private Button button1;
-        private Button button2;
         private OpenFileDialog openFileDialog1;
+        private TabPage deviceControl;
+        private Button button2;
+        private Label powerText;
+        private ComboBox powerDrpDwn;
+        private Button powerBtn;
+        private Button connectBtn;
     }
 }
