@@ -1,7 +1,10 @@
 ﻿using ADBScuffedMirroring.ADB;
 using AdvancedSharpAdbClient;
 using AdvancedSharpAdbClient.DeviceCommands;
+using AdvancedSharpAdbClient.Exceptions;
+using AdvancedSharpAdbClient.Receivers;
 using System.Diagnostics;
+using System.Reflection;
 using static ADBScuffedMirroring.ADB.DeviceHandler;
 using static ADBScuffedMirroring.ADB.Keycodes;
 namespace ADBScuffedMirroring
@@ -9,6 +12,12 @@ namespace ADBScuffedMirroring
     public partial class deviceForm : Form
     {
         ADBInstance inst = new(new AdbClient());
+        private bool curDragging = false;
+        private bool isMouseClicked = false;
+        private Point startPoint;
+        private Point endPoint;
+        ConsoleOutputReceiver receiver = new ConsoleOutputReceiver();
+        private Stopwatch dragTime = new Stopwatch();
 
         public deviceForm()
         {
@@ -28,6 +37,36 @@ namespace ADBScuffedMirroring
             Text = $"SADC: {model}";
         }
 
+        private void mouseDown(object sender, MouseEventArgs e)
+        {
+            dragTime.Stop();
+            Debug.WriteLine(e.Button);
+            if (e.Button == MouseButtons.Left)
+            {
+                isMouseClicked = true;
+                startPoint = new Point(e.X, e.Y);
+                dragTime.Start();
+            }
+        }
+        private async void mouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isMouseClicked = false;
+                curDragging = false;
+                endPoint = new Point(e.X, e.Y);
+                dragTime.Stop();
+
+                double timeDragging = dragTime.Elapsed.TotalMilliseconds;
+
+                if (timeDragging > 2000)
+                {
+                    Debug.WriteLine($"Swipe from {startPoint} to {endPoint} in {timeDragging}ms");
+                    await inst.client.SwipeAsync(inst.deviceData, startPoint, endPoint, (long)timeDragging);
+                }
+            }
+        }
+
         private async void timerTick(object sender, EventArgs e)
         {
             if (screenBox != null && !inst.deviceData.IsEmpty)
@@ -44,8 +83,9 @@ namespace ADBScuffedMirroring
                         int? height = screenBox.Image.Size.Height;
                         screenBox.Size = new Size((width ?? 240) + 8, (height ?? 320) + 28);
                         tabs.Size = new Size((width ?? 240) + 8, (height ?? 320) + 28);
-                        ClientSize = new Size((width ?? 240) + 8, (height ?? 320) + 28);
-                    } else
+                        ClientSize = new Size((width ?? 240) + 8, (height ?? 320) + 28 + 20);
+                    }
+                    else
                     {
                         connectBtn.Visible = true;
                     }
@@ -62,6 +102,7 @@ namespace ADBScuffedMirroring
         {
             MouseEventArgs me = (MouseEventArgs)e;
             Point coordinates = me.Location;
+            Debug.WriteLine("Click at " + coordinates);
             await inst.client.ClickAsync(inst.deviceData, coordinates);
         }
 
@@ -69,8 +110,9 @@ namespace ADBScuffedMirroring
         {
             if (tabs.SelectedIndex == 0)
             {
-                Debug.WriteLine(getKeycode((Keys)e.KeyValue).ToString());
-                await inst.client.SendKeyEventAsync(inst.deviceData, getKeycode((Keys)e.KeyValue).ToString());
+                Debug.WriteLine(((Keys)e.KeyValue).ToString());
+                Debug.WriteLine(GetKeycode((Keys)e.KeyValue).ToString());
+                await inst.client.SendKeyEventAsync(inst.deviceData, GetKeycode((Keys)e.KeyValue).ToString());
             }
         }
 
@@ -142,6 +184,82 @@ namespace ADBScuffedMirroring
         private void connectBtn_Click(object sender, EventArgs e)
         {
             init();
+        }
+
+        private async void consoleInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((Keys)e.KeyValue == Keys.Enter)
+            {
+                string command = consoleInput.Text;
+                consoleInput.Text = "";
+                consoleOutput.Text += $"> {command}\n";
+                try
+                {
+                    ConsoleOutputReceiver receiver = new ConsoleOutputReceiver();
+                    await inst.client.ExecuteShellCommandAsync(inst.deviceData, command, receiver);
+
+                    if (receiver.ToString() != "")
+                    {
+                        consoleOutput.Text += $"{receiver}\n";
+                    }
+                }
+                catch (ShellCommandUnresponsiveException ex)
+                {
+                    consoleOutput.Text += $"{ex.InnerException.Message}\n";
+                }
+            }
+        }
+
+        private async void rootBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                await inst.client.RootAsync(inst.deviceData);
+            }
+            catch (AdbException ex)
+            {
+                MessageBox.Show($"Device returned error: {ex.Message}", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void deviceForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void backBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_BACK.ToString());
+        }
+
+        private async void homeBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_HOME.ToString());
+        }
+
+        private async void tasksBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_APP_SWITCH.ToString());
+        }
+
+        private async void volumeUpBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_VOLUME_UP.ToString());
+        }
+
+        private async void volumeDownBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_VOLUME_DOWN.ToString());
+        }
+
+        private async void volumeMuteBtn_Click(object sender, EventArgs e)
+        {
+            await inst.client.SendKeyEventAsync(inst.deviceData, AndroidKeys.KEYCODE_VOLUME_MUTE.ToString());
+        }
+
+        private void inputStartBtn_Click(object sender, EventArgs e)
+        {
+            new InputTextForm(inst).ShowDialog();
         }
     }
 }

@@ -12,7 +12,8 @@ public class DeviceHandler
 {
     public static async Task<Image> GrabFrameBuffer(AdbClient client, DeviceData data)
     {
-        // Dexrn: NOTE THIS WILL NOT CAST IF DOTNET VERSION IS 8.
+        // Dexrn: NOTE THIS WILL NOT CAST IF DOTNET VERSION IS 8, OR IF TARGETING A DIFFERENT OS THAN WINDOWS 10 17763
         return (Image)await client.GetFrameBufferAsync(data);
     }
+
 }

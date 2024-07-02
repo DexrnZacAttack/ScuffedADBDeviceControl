@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="adb" Version="33.0.3" />
     <PackageReference Include="AdvancedSharpAdbClient" Version="3.3.12" />
   </ItemGroup>
 
